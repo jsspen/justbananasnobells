@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Just Bananas, No Bells</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>Our List</h1>
+        <table id="shopping-list">
+            <thead>
+                <tr>
+                    <th>Done</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Store</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Items will be dynamically added here -->
+            </tbody>
+        </table>
+        <form id="item-form">
+            <input type="text" id="item-name" placeholder="Item Name" required>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+            <input type="text" id="store" placeholder="Store" required>
+            <input type="text" id="notes" placeholder="Notes">
+            <button type="submit">Add Item</button>
+        </form>
+        <button id="clear-completed">Clear Completed Items</button>
+        <div id="filters">
+            <label for="store-filter">Filter by Store:</label>
+            <select id="store-filter">
+                <option value="all">All</option>
+                <!-- Dynamic store options -->
+            </select>
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

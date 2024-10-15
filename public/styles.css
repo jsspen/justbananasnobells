@@ -1,0 +1,61 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+tr.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+form input,
+form button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+#clear-completed {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+#filters {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  table,
+  form,
+  #clear-completed,
+  #filters {
+    width: 100%;
+  }
+
+  form {
+    flex-direction: column;
+  }
+}
