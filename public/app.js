@@ -44,7 +44,7 @@ db.on("value", (snapshot) => {
     const item = child.val();
     item.id = child.key;
     items.push(item);
-    stores.add(item.store);
+    stores.add(item.store.trim());
   });
 
   // Sort items: incomplete first
@@ -80,7 +80,7 @@ db.on("value", (snapshot) => {
 
     // Store
     const tdStore = document.createElement("td");
-    tdStore.textContent = item.store;
+    tdStore.textContent = item.store.trim();
     tr.appendChild(tdStore);
 
     // Notes
@@ -128,7 +128,7 @@ storeFilter.addEventListener("change", () => {
       const items = [];
       snapshot.forEach((child) => {
         const item = child.val();
-        if (item.store === filter) {
+        if (item.store.trim() === filter) {
           item.id = child.key;
           items.push(item);
         }
@@ -166,7 +166,7 @@ storeFilter.addEventListener("change", () => {
 
         // Store
         const tdStore = document.createElement("td");
-        tdStore.textContent = item.store;
+        tdStore.textContent = item.store.trim();
         tr.appendChild(tdStore);
 
         // Notes
