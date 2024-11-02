@@ -9,6 +9,9 @@ const firebaseConfig = {
   appId: "1:318911824684:web:190fef41135cf946ac2289",
 };
 
+// firebase emulator:new for local host
+// firebase deploy to update live url
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("shoppingList");
@@ -25,14 +28,27 @@ form.addEventListener("submit", (e) => {
   const item = {
     name: document.getElementById("item-name").value,
     quantity: document.getElementById("quantity").value,
-    store: document.getElementById("store").value,
+    store: document.getElementById("store").value.trim(),
     notes: document.getElementById("notes").value,
     completed: false,
     timestamp: Date.now(),
   };
-  db.push(item);
+  db.push(item)
+    .then(() => console.log("Item added:", item))
+    .catch(console.error);
   form.reset();
 });
+
+// new Sortable(shoppingList, {
+//   animation: 150,
+//   onEnd: (event) => {
+//     const items = Array.from(shoppingList.querySelectorAll("tr"));
+//     items.forEach((row, index) => {
+//       const itemId = row.getAttribute("data-id");
+//       db.child(itemId).update({ position: index });
+//     });
+//   },
+// });
 
 // Render items from Firebase
 db.on("value", (snapshot) => {
@@ -44,7 +60,7 @@ db.on("value", (snapshot) => {
     const item = child.val();
     item.id = child.key;
     items.push(item);
-    stores.add(item.store.trim());
+    stores.add(item.store);
   });
 
   // Sort items: incomplete first
@@ -80,7 +96,7 @@ db.on("value", (snapshot) => {
 
     // Store
     const tdStore = document.createElement("td");
-    tdStore.textContent = item.store.trim();
+    tdStore.textContent = item.store;
     tr.appendChild(tdStore);
 
     // Notes
@@ -120,9 +136,62 @@ clearBtn.addEventListener("click", () => {
 // Filter items by store
 storeFilter.addEventListener("change", () => {
   const filter = storeFilter.value;
+
   if (filter === "all") {
-    db.on("value", () => {}); // Reset listener
+    db.on("value", (snapshot) => {
+      shoppingList.innerHTML = "";
+      const items = [];
+      snapshot.forEach((child) => {
+        const item = child.val();
+        item.id = child.key;
+        items.push(item);
+      });
+      items.sort(
+        (a, b) => a.completed - b.completed || a.timestamp - b.timestamp
+      );
+      items.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.className = item.completed ? "completed" : "";
+
+        // Checkbox
+        const tdCheckbox = document.createElement("td");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.completed;
+        checkbox.addEventListener("change", () => {
+          db.child(item.id).update({
+            completed: checkbox.checked,
+            timestamp: Date.now(),
+          });
+        });
+        tdCheckbox.appendChild(checkbox);
+        tr.appendChild(tdCheckbox);
+
+        // Item Name
+        const tdName = document.createElement("td");
+        tdName.textContent = item.name;
+        tr.appendChild(tdName);
+
+        // Quantity
+        const tdQuantity = document.createElement("td");
+        tdQuantity.textContent = item.quantity;
+        tr.appendChild(tdQuantity);
+
+        // Store
+        const tdStore = document.createElement("td");
+        tdStore.textContent = item.store;
+        tr.appendChild(tdStore);
+
+        // Notes
+        const tdNotes = document.createElement("td");
+        tdNotes.textContent = item.notes;
+        tr.appendChild(tdNotes);
+
+        shoppingList.appendChild(tr);
+      });
+    });
   } else {
+    // Attach a filtered listener
     db.on("value", (snapshot) => {
       shoppingList.innerHTML = "";
       const items = [];
@@ -133,6 +202,8 @@ storeFilter.addEventListener("change", () => {
           items.push(item);
         }
       });
+
+      // Sort and display filtered items
       items.sort(
         (a, b) => a.completed - b.completed || a.timestamp - b.timestamp
       );
