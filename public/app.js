@@ -28,7 +28,7 @@ form.addEventListener("submit", (e) => {
   const item = {
     name: document.getElementById("item-name").value,
     quantity: document.getElementById("quantity").value,
-    store: document.getElementById("store").value.trim(),
+    store: document.getElementById("store").value.trim() || "Any",
     notes: document.getElementById("notes").value,
     completed: false,
     timestamp: Date.now(),
